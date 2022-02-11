@@ -15,6 +15,13 @@ export class UsersService {
     return await this.model.findOne({ _id: id });
   }
 
+  /**
+   * not the best way of doing this
+   */
+  async findBy(email: string): Promise<User> {
+    return await this.model.findOne({ email });
+  }
+
   async create(user: User): Promise<User> {
     const newModel = new this.model(user);
     return await newModel.save();

@@ -12,7 +12,7 @@ export class AuthService {
     const user = await this.usersService.findBy(email);
     if (user && user.password === pass) {
       const { password, ...result } = user;
-      return result;
+      return result; // change this later
     }
     return null;
   }

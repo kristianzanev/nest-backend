@@ -1,15 +1,17 @@
-import { Controller, Post, Body } from '@nestjs/common';
-import { User } from '../users/interfaces/user.interface';
-import { CreateUserDto } from 'src/users/dto/create-user.dto'; // this dto should be changed with user pass dto
-import { LocalStrategy } from './local.strategy';
+import { Controller, Post, UseGuards, Request } from '@nestjs/common';
+import { LocalAuthGuard } from './local-auth.guard';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly localStrategy: LocalStrategy) {}
+  /**
+   * @description -  json with username and password should be passed in the request body from login route
+   *  then the login method below is called and handled through LocalAuthGuard which is connected to
+   *  the local.strategy.ts from the passport module
+   *
+   */
+  @UseGuards(LocalAuthGuard)
   @Post('login')
-  login(@Body() createUserDto: CreateUserDto): Promise<User> {
-    // this dto should be changed with user pass dto
-    const { email, password } = createUserDto;
-    return this.localStrategy.validate(email, password);
+  async login(@Request() req) {
+    return req.user;
   }
 }

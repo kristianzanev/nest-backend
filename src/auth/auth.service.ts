@@ -1,18 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { UsersService } from '../users/users.service'; // this is shared service so it is necessary to import it in the auth.module
+import { User } from '../users/interfaces/user.interface';
 
 @Injectable()
 export class AuthService {
   constructor(private usersService: UsersService) {}
 
   /**
-   * a good idea is to add validation by either userName or email
+   * TODO: a good idea is to add validation by either userName or email
    */
-  async validateUser(email: string, pass: string): Promise<any> {
-    const user = await this.usersService.findBy(email);
+  async validateUser(username: string, pass: string): Promise<User | null> {
+    const user = await this.usersService.findBy(username);
     if (user && user.password === pass) {
-      const { password, ...result } = user;
-      return result; // change this later
+      return user; // change this later
     }
     return null;
   }

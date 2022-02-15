@@ -44,9 +44,8 @@ export class AuthController {
   @Post('logoutAllDevices')
   logout(@Request() req): Promise<User> {
     const { id } = req.user;
-    // const tokenVersion = new mongoose.Types.ObjectId(); // this is not working for some reason
-    const tokenVersion = `${Date.now()}`;
-    // implement some sort of user confirmation
+    const tokenVersion = new mongoose.Types.ObjectId().toString();
+
     return this.usersService.update(id, {
       tokenVersion,
     });

@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  ConflictException,
+  BadRequestException,
+} from '@nestjs/common';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from './interfaces/user.interface';
@@ -20,8 +24,16 @@ export class UsersService {
   }
 
   async create(user: User): Promise<User> {
-    const newModel = new this.model(user);
-    return await newModel.save();
+    try {
+      const newModel = new this.model(user);
+      return await newModel.save();
+    } catch (error) {
+      throw new BadRequestException({
+        statusCode: 400,
+        message: error,
+        error: 'Bad Request',
+      });
+    }
   }
 
   async delete(id: string): Promise<User> {

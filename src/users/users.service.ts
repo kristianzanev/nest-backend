@@ -1,11 +1,8 @@
-import {
-  Injectable,
-  ConflictException,
-  BadRequestException,
-} from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from './interfaces/user.interface';
+import { hashPass } from 'src/utils/pass.bcrypt';
 
 @Injectable()
 export class UsersService {
@@ -25,9 +22,11 @@ export class UsersService {
 
   async create(user: User): Promise<User> {
     try {
-      const newModel = new this.model(user);
+      const hashedPass = await hashPass(user.password);
+      const newModel = new this.model({ ...user, password: hashedPass });
       return await newModel.save();
     } catch (error) {
+      // will throw an error if username or email are already present in the db
       throw new BadRequestException({
         statusCode: 400,
         message: error,

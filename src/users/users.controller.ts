@@ -39,4 +39,6 @@ export class UsersController {
   update(@Body() updateDto: CreateUserDto, @Param('id') id): Promise<User> {
     return this.service.update(id, updateDto);
   }
+
+  //TODO: add change-pass route
 }

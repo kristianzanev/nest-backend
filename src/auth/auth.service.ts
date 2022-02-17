@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { UsersService } from '../users/users.service'; // this is shared service so it is necessary to import it in the auth.module
 import { User } from '../users/interfaces/user.interface';
 import { JwtService } from '@nestjs/jwt';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -16,9 +17,12 @@ export class AuthService {
    */
   async validateUser(username: string, pass: string): Promise<User | null> {
     const user = await this.usersService.findBy(username);
-    if (user && user.password === pass) {
+    const isPassMatch = await bcrypt.compare(pass, user.password);
+
+    if (isPassMatch) {
       return user;
     }
+
     return null;
   }
 

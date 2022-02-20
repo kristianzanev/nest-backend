@@ -23,7 +23,11 @@ export default class EmailService {
     });
   }
 
-  sendMail(options: Mail.Options) {
+  public sendMail(options: Mail.Options): Promise<any> {
     return this.nodemailerTransport.sendMail(options);
+  }
+
+  public doNothing() {
+    console.warn('nothing')
   }
 }

@@ -16,8 +16,8 @@ export class UsersService {
     return await this.model.findOne({ _id: id });
   }
 
-  async findBy(username: string): Promise<User> {
-    return await this.model.findOne({ username });
+  async findBy(param: object): Promise<User> {
+    return await this.model.findOne(param);
   }
 
   async create(user: User): Promise<User> {
@@ -41,5 +41,15 @@ export class UsersService {
 
   async update(id: string, user: User): Promise<User> {
     return await this.model.findByIdAndUpdate(id, user, { new: true });
+  }
+
+  async markEmailAsConfirmed(userId: string): Promise<User> {
+    return await this.model.findByIdAndUpdate(
+      userId,
+      {
+        isEmailConfirmed: true,
+      },
+      { new: true },
+    );
   }
 }

@@ -6,6 +6,7 @@ import {
   Delete,
   Body,
   Param,
+  Query,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UsersService } from './users.service';
@@ -31,6 +32,8 @@ export class UsersController {
 
   @Post('register')
   register() {
+    // sending GET req to register route will not work here because it's already in use
+    // @Query('token') token: number // for getting params from url, example: http://localhost:3000/users?token=123456
     const dummyMailOptions = {
       from: '"zadachki.bg " <tasker-bot@outlook.com>', // sender address (who sends)
       to: 'kristianzanev@hotmail.com', // can also be list of receivers (just put comma between emails)

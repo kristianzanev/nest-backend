@@ -36,7 +36,11 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @Get('profile')
   getProfile(@Request() req): Promise<User> {
-    const { id } = req.user;
+    /**  the db is called on each validation, one way to optimize it is to add
+     more info about user from the jwt.strategy validate method so that instead of
+     making one more call to get the user data, it can be done through the validation and passed to the req.user bellow
+    */
+    const { id, username, tokenVersion } = req.user;
     return this.usersService.findOne(id);
   }
 

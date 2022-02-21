@@ -8,6 +8,9 @@ export default class EmailService {
   private nodemailerTransport: Mail;
 
   constructor() {
+    /**
+     * TODO: might be good idea to use more secure email provider than outlook
+     */
     this.nodemailerTransport = createTransport({
       host: config.emailService, // hostname
       secure: false, // TLS requires secureConnection to be false
@@ -25,9 +28,5 @@ export default class EmailService {
 
   public sendMail(options: Mail.Options): Promise<any> {
     return this.nodemailerTransport.sendMail(options);
-  }
-
-  public doNothing() {
-    console.warn('nothing')
   }
 }

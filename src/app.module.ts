@@ -8,7 +8,12 @@ import { EmailModule } from './email/email.module';
 import config from './config/keys';
 
 @Module({
-  imports: [MongooseModule.forRoot(config.mongoURI), UsersModule, AuthModule, EmailModule],
+  imports: [
+    MongooseModule.forRoot(config.mongoURI),
+    UsersModule,
+    AuthModule,
+    EmailModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

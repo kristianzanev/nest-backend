@@ -7,7 +7,9 @@ import {
   UseGuards,
   Req,
 } from '@nestjs/common';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { AuthService } from 'src/auth/auth.service';
+import { LocalAuthGuard } from 'src/auth/local-auth.guard';
+import config from 'src/config/keys';
 import ConfirmEmailDto from './confirmEmail.dto';
 import { EmailConfirmationService } from './emailConfirmation.service';
 // import JwtAuthenticationGuard from '../authentication/jwt-authentication.guard';
@@ -18,18 +20,36 @@ import { EmailConfirmationService } from './emailConfirmation.service';
 export class EmailConfirmationController {
   constructor(
     private readonly emailConfirmationService: EmailConfirmationService,
+    private readonly authService: AuthService,
   ) {}
 
   @Post('confirm')
-  async confirm(@Body() confirmationData: ConfirmEmailDto) {
+  @UseGuards(LocalAuthGuard) // user should be logged (but not confirmed) in order to resend link
+  async confirm(
+    @Body() confirmationData: ConfirmEmailDto,
+    @Req() request,
+  ): Promise<{
+    access_token: string;
+  }> {
     const email = await this.emailConfirmationService.decodeConfirmationToken(
       confirmationData.token,
     );
-    await this.emailConfirmationService.confirmEmail(email);
+
+    await this.emailConfirmationService.confirmEmail(
+      email,
+      request.user.username,
+    );
+
+    const jwtOptions = {
+      secret: config.jwtSecret,
+      expiresIn: config.jwtUserExpiry,
+    };
+
+    return this.authService.login(request.user, jwtOptions);
   }
 
   @Post('resend-confirmation-link')
-  @UseGuards(JwtAuthGuard) // user should be logged (but not confirmed) in order to resend link
+  @UseGuards(LocalAuthGuard) // user should be logged (but not confirmed) in order to resend link
   async resendConfirmationLink(@Req() request) {
     //TODO: add interface for the request with user - RequestWithUser
     await this.emailConfirmationService.resendConfirmationLink(request.user.id);

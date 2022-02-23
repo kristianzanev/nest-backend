@@ -14,6 +14,7 @@ import { User } from '../users/interfaces/user.interface';
 import * as mongoose from 'mongoose';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { EmailConfirmationService } from 'src/email/emailConfirmation.service';
+import { EmailConfirmationGuard } from 'src/email/emailConfirmation.guard';
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -39,7 +40,8 @@ export class AuthController {
    * @returns jwt access token
    *
    */
-  @UseGuards(LocalAuthGuard)
+  @UseGuards(EmailConfirmationGuard) // this is second
+  @UseGuards(LocalAuthGuard) // this is executed first
   @Post('login')
   async login(@Request() req): Promise<{
     access_token: string;

@@ -17,8 +17,8 @@ export class EmailConfirmationService {
   public sendVerificationLink(email: string) {
     const payload = { email };
     const token = this.jwtService.sign(payload, {
-      secret: config.emailUser,
-      expiresIn: '180s',
+      secret: config.jwtSecret,
+      expiresIn: config.jwtEmailExpiry,
     });
 
     const url = `${config.emailConfirmationUrl}?token=${token}`;
@@ -32,10 +32,14 @@ export class EmailConfirmationService {
     });
   }
 
-  public async confirmEmail(email: string) {
+  public async confirmEmail(email: string, username: string) {
     const user = await this.usersService.findBy({ email });
     if (user.isEmailConfirmed) {
       throw new BadRequestException('Email already confirmed');
+    }
+    if (username !== user.username) {
+      // just a precation
+      throw new BadRequestException(`User doesn't match`);
     }
     await this.usersService.markEmailAsConfirmed(user.id);
   }
@@ -51,6 +55,7 @@ export class EmailConfirmationService {
       }
       throw new BadRequestException();
     } catch (error) {
+      console.warn(error);
       if (error?.name === 'TokenExpiredError') {
         throw new BadRequestException('Email confirmation token expired');
       }

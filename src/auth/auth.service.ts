@@ -36,10 +36,10 @@ export class AuthService {
       tokenVersion: user.tokenVersion,
     };
 
-    console.warn(payload)
+    const access_token = this.jwtService.sign(payload, jwtOptions);
 
     return {
-      access_token: this.jwtService.sign(payload, jwtOptions),
+      access_token,
     };
   }
 }

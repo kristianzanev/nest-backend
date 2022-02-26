@@ -5,11 +5,21 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { EmailModule } from './email/email.module';
-import config from './config/keys';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import config from './config/config';
 
 @Module({
   imports: [
-    MongooseModule.forRoot(config.mongoURI),
+    ConfigModule.forRoot({ isGlobal: true, load: [config] }), // loading custom config and .env variables
+    MongooseModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => {
+        return {
+          uri: configService.get('MONGO_URI'),
+        };
+      },
+      inject: [ConfigService],
+    }),
     UsersModule,
     AuthModule,
     EmailModule,

@@ -1,27 +1,28 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import config from 'src/config/keys';
-// import { ConfigService } from '@nestjs/config';
 import EmailService from '../email/email.service';
 import { UsersService } from '../users/users.service';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class EmailConfirmationService {
   constructor(
     private readonly jwtService: JwtService,
-    // private readonly configService: ConfigService,
     private readonly emailService: EmailService,
     private readonly usersService: UsersService,
+    private readonly configService: ConfigService,
   ) {}
 
   public sendVerificationLink(email: string) {
     const payload = { email };
     const token = this.jwtService.sign(payload, {
-      secret: config.jwtSecret,
-      expiresIn: config.jwtEmailExpiry,
+      secret: this.configService.get('JWT_SECRET'),
+      expiresIn: this.configService.get('JWT_EMAIL_EXPIRY'),
     });
 
-    const url = `${config.emailConfirmationUrl}?token=${token}`;
+    const url = `${this.configService.get(
+      'EMAIL_CONFIRMATION_URL',
+    )}?token=${token}`;
 
     const text = `Welcome to the application. To confirm the email address, click here: ${url}`;
 
@@ -47,7 +48,7 @@ export class EmailConfirmationService {
   public async decodeConfirmationToken(token: string) {
     try {
       const payload = await this.jwtService.verify(token, {
-        secret: config.jwtSecret,
+        secret: this.configService.get('JWT_SECRET'),
       });
 
       if (typeof payload === 'object' && 'email' in payload) {
@@ -55,7 +56,6 @@ export class EmailConfirmationService {
       }
       throw new BadRequestException();
     } catch (error) {
-      console.warn(error);
       if (error?.name === 'TokenExpiredError') {
         throw new BadRequestException('Email confirmation token expired');
       }

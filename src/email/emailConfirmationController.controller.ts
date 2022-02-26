@@ -9,9 +9,9 @@ import {
 } from '@nestjs/common';
 import { AuthService } from 'src/auth/auth.service';
 import { LocalAuthGuard } from 'src/auth/local-auth.guard';
-import config from 'src/config/keys';
 import ConfirmEmailDto from './confirmEmail.dto';
 import { EmailConfirmationService } from './emailConfirmation.service';
+import { ConfigService } from '@nestjs/config';
 // import JwtAuthenticationGuard from '../authentication/jwt-authentication.guard';
 // import RequestWithUser from '../authentication/requestWithUser.interface';
 
@@ -21,6 +21,7 @@ export class EmailConfirmationController {
   constructor(
     private readonly emailConfirmationService: EmailConfirmationService,
     private readonly authService: AuthService,
+    private readonly configService: ConfigService,
   ) {}
 
   @Post('confirm')
@@ -41,8 +42,8 @@ export class EmailConfirmationController {
     );
 
     const jwtOptions = {
-      secret: config.jwtSecret,
-      expiresIn: config.jwtUserExpiry,
+      secret: this.configService.get('JWT_SECRET'),
+      expiresIn: this.configService.get('JWT_USER_EXPIRY'),
     };
 
     return this.authService.login(request.user, jwtOptions);

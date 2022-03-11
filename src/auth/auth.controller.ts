@@ -15,6 +15,7 @@ import * as mongoose from 'mongoose';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { EmailConfirmationService } from 'src/email/emailConfirmation.service';
 import { EmailConfirmationGuard } from 'src/email/emailConfirmation.guard';
+import { UpdateUserInfoDto } from 'src/users/dto/update-user-info.dto';
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -61,12 +62,23 @@ export class AuthController {
      more info about user from the jwt.strategy validate method so that instead of
      making one more call to get the user data, it can be done through the validation and passed to the req.user bellow
     */
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { id, username, tokenVersion } = req.user;
     return this.usersService.findOne(id);
   }
 
   @UseGuards(JwtAuthGuard)
-  @Post('logoutAllDevices')
+  @Post('update-profile-info')
+  updateProfile(
+    @Body() updateDto: UpdateUserInfoDto,
+    @Request() req,
+  ): Promise<User> {
+    const { id } = req.user;
+    return this.usersService.update(id, updateDto);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('logout-all-devices')
   logout(@Request() req): Promise<User> {
     const { id } = req.user;
     const tokenVersion = new mongoose.Types.ObjectId().toString();

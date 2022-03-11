@@ -10,6 +10,7 @@ import {
 import { CreateUserDto } from './dto/create-user.dto';
 import { UsersService } from './users.service';
 import { User } from './interfaces/user.interface';
+import { FindUserByDto } from './dto/find-user-by.dto';
 
 @Controller('users')
 export class UsersController {
@@ -20,15 +21,20 @@ export class UsersController {
     return this.userService.findAll();
   }
 
-  @Get(':id')
+  @Get('find-user-by')
+  findUserBy(@Body() findUserDto: FindUserByDto): Promise<User> {
+    return this.userService.findBy(findUserDto);
+  }
+
+  @Get(':id') // get request with :id should be always on bottom of other get requests
   findOne(@Param('id') id): Promise<User> {
     return this.userService.findOne(id);
   }
 
-  @Post()
-  create(@Body() createDto: CreateUserDto): Promise<User> {
-    return this.userService.create(createDto);
-  }
+  // @Post() // this is handled in auth controller
+  // create(@Body() createDto: CreateUserDto): Promise<User> {
+  //   return this.userService.create(createDto);
+  // }
 
   @Delete(':id')
   delete(@Param('id') id): Promise<User> {

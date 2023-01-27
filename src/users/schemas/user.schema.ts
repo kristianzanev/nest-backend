@@ -2,10 +2,10 @@ import * as mongoose from 'mongoose';
 
 const UserSchema = new mongoose.Schema(
   {
-    email: { type: String, required: true, unique: true },
-    username: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
-    name: { type: String, default: '' },
+    email: { type: String, required: true, unique: true, maxlength: 500 },
+    username: { type: String, required: true, unique: true, maxlength: 500 },
+    password: { type: String, required: true, maxlength: 500 },
+    name: { type: String, default: '', maxlength: 500 },
     description: { type: String, default: '', maxlength: 5000 },
     isEmailConfirmed: { type: Boolean, default: false },
     tokenVersion: String,

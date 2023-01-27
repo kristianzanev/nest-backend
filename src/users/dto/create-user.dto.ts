@@ -3,6 +3,7 @@ import { IsPasswordValid } from './password.validator';
 
 export class CreateUserDto {
   // decorator is absolutely necessary for each property otherwise it's not going to be extracted from the req body
+  @IsNotEmpty()
   @IsEmail()
   email: string;
 

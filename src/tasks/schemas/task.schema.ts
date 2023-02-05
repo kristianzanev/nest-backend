@@ -8,6 +8,7 @@ const TaskSchema = new mongoose.Schema(
     deadline: { type: String, default: '', maxlength: 500 },
     coordinates: { type: String, default: '', maxlength: 500 },
     category: { type: String, default: '', maxlength: 500 },
+    userId: { type: String, default: '', maxlength: 500 },
   },
   { timestamps: true }, // adds create_at, update_at properties
 );

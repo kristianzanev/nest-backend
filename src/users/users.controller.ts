@@ -1,13 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Put,
-  Delete,
-  Body,
-  Param,
-} from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
+import { Controller, Get, Post, Body, Param } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { User } from './interfaces/user.interface';
 import { FindUserByDto } from './dto/find-user-by.dto';
@@ -26,21 +17,25 @@ export class UsersController {
     return this.userService.findOne(id);
   }
 
-  @Delete(':id')
-  delete(@Param('id') id): Promise<User> {
-    return this.userService.delete(id);
-  }
-
-  @Put(':id')
-  update(@Body() updateDto: CreateUserDto, @Param('id') id): Promise<User> {
-    //TODO: add UpdateUserDto excluding sensitive data like password, tokenVersion and etc
-    return this.userService.update(id, updateDto);
-  }
-
   @Post('find-user-by')
   findUserBy(@Body() findUserDto: FindUserByDto): Promise<User> {
     return this.userService.findBy(findUserDto);
   }
+
+  // @Delete(':id') // this should be handled only in auth or from admin role
+  // delete(@Param('id') id): Promise<User> {
+  //   return this.userService.delete(id);
+  // }
+
+  // @Put(':id') // this is handled in auth controller
+  // update(@Body() updateDto: UpdateUserInfoDto, @Param('id') id): Promise<User> {
+  // return this.userService.update(id, updateDto);
+  // }
+
+  // @Post() // this is handled in auth controller
+  // create(@Body() createDto: CreateUserDto): Promise<User> {
+  //   return this.userService.create(createDto);
+  // }
 
   //TODO: add change-pass route
 }

@@ -6,4 +6,5 @@ export interface Task {
   coordinates?: string;
   category?: string;
   userId?: string;
+  id?: string;
 }

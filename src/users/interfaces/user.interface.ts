@@ -7,4 +7,5 @@ export interface User {
   email?: string;
   password?: string;
   isEmailConfirmed?: string;
+  tasks?: Array<string>;
 }

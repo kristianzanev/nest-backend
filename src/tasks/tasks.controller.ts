@@ -14,41 +14,51 @@ import { TasksService } from './tasks.service';
 import { Task } from './interfaces/task.interface';
 import { FindTaskByDto } from './dto/find-task-by.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { UsersService } from 'src/users/users.service';
 @Controller('tasks')
 export class TasksController {
-  constructor(private readonly taskService: TasksService) {}
+  constructor(
+    private tasksService: TasksService,
+    private usersService: UsersService,
+  ) {}
 
   @Get()
   findAll(): Promise<Task[]> {
-    return this.taskService.findAll();
+    return this.tasksService.findAll();
   }
 
   @UseGuards(JwtAuthGuard)
-  @Post()
-  create(@Body() createTaskDto: CreateTaskDto, @Request() req): Promise<Task> {
+  @Post('create')
+  async create(
+    @Body() createTaskDto: CreateTaskDto,
+    @Request() req,
+  ): Promise<Task> {
     const { id: userId } = req.user;
-    // TODO add new task in the user's model tasks-list
-    return this.taskService.create({ ...createTaskDto, userId });
+    const task = await this.tasksService.create({ ...createTaskDto, userId });
+
+    await this.usersService.addTask(userId, task.id);
+
+    return task;
   }
 
   @Get(':id') // get request with :id should be always on bottom of other get requests
   findOne(@Param('id') id): Promise<Task> {
-    return this.taskService.findOne(id);
+    return this.tasksService.findOne(id);
   }
 
   @Delete(':id')
   delete(@Param('id') id): Promise<Task> {
-    return this.taskService.delete(id);
+    return this.tasksService.delete(id);
   }
 
   @Put(':id')
   update(@Body() updateDto: CreateTaskDto, @Param('id') id): Promise<Task> {
-    return this.taskService.update(id, updateDto);
+    return this.tasksService.update(id, updateDto);
   }
 
   @Post('find-user-by')
   findUserBy(@Body() findTaskDto: FindTaskByDto): Promise<Task> {
-    return this.taskService.findBy(findTaskDto);
+    return this.tasksService.findBy(findTaskDto);
   }
 
   //TODO: add change-pass route

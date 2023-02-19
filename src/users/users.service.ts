@@ -50,6 +50,13 @@ export class UsersService {
     );
   }
 
+  async removeTask(userId: string, taskId: string) {
+    return await this.model.updateOne(
+      { _id: userId },
+      { $pull: { tasks: taskId } },
+    );
+  }
+
   async markEmailAsConfirmed(userId: string): Promise<User> {
     return await this.model.findByIdAndUpdate(
       userId,

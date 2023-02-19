@@ -1,11 +1,24 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsString, IsBoolean } from 'class-validator';
 
-export class UpdateTaskInfoDto {
+export class UpdateTaskDto {
   // decorator is absolutely necessary for each property otherwise it's not going to be extracted from the req body
   @IsString()
-  description: string;
+  @IsNotEmpty()
+  title: string;
 
   @IsString()
   @IsNotEmpty()
-  name: string;
+  description: string;
+
+  @IsString()
+  deadline: string;
+
+  @IsBoolean()
+  isOnline: boolean;
+
+  @IsString()
+  coordinates: string;
+
+  @IsString()
+  category: string;
 }

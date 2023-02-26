@@ -8,7 +8,8 @@ import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { EmailModule } from './email/email.module';
 import { TasksModule } from './tasks/tasks.module';
-
+import { APP_GUARD } from '@nestjs/core';
+import { RolesGuard } from './roles/roles.guard';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, load: [config] }), // loading custom config and .env variables

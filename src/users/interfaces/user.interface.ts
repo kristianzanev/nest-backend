@@ -8,4 +8,5 @@ export interface User {
   password?: string;
   isEmailConfirmed?: string;
   tasks?: Array<string>;
+  roles?: Array<string>;
 }

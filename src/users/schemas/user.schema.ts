@@ -9,6 +9,7 @@ const UserSchema = new mongoose.Schema(
     description: { type: String, default: '', maxlength: 5000 },
     isEmailConfirmed: { type: Boolean, default: false },
     tasks: { type: Array, default: [] },
+    roles: { type: Array, default: ['user'] },
     tokenVersion: String,
   },
   { timestamps: true }, // adds create_at, update_at properties

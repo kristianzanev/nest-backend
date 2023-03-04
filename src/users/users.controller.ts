@@ -1,8 +1,12 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { User } from './interfaces/user.interface';
 import { FindUserByDto } from './dto/find-user-by.dto';
-
+import { Roles } from 'src/roles/roles.decorator';
+import { Role } from 'src/roles/role.enum';
+import { RolesGuard } from 'src/roles/roles.guard';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { UseGuards } from '@nestjs/common/decorators';
 @Controller('users')
 export class UsersController {
   constructor(private readonly userService: UsersService) {}
@@ -22,15 +26,12 @@ export class UsersController {
     return this.userService.findBy(findUserDto);
   }
 
-  // @Delete(':id') // this should be handled only in auth or from admin role
-  // delete(@Param('id') id): Promise<User> {
-  //   return this.userService.delete(id);
-  // }
-
-  // @Put(':id') // this is handled in auth controller
-  // update(@Body() updateDto: UpdateUserInfoDto, @Param('id') id): Promise<User> {
-  // return this.userService.update(id, updateDto);
-  // }
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.Architect)
+  @Delete(':id')
+  delete(@Param('id') id): any {
+    return this.userService.delete(id);
+  }
 
   // @Post() // this is handled in auth controller
   // create(@Body() createDto: CreateUserDto): Promise<User> {

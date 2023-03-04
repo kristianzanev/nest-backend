@@ -1,6 +1,6 @@
 import * as bcrypt from 'bcrypt';
 
-export function hashPass(rawPass: string): Promise<string> {
+export function hashString(string: string): Promise<string> {
   const salt = bcrypt.genSaltSync();
-  return bcrypt.hash(rawPass, salt);
+  return bcrypt.hash(string, salt);
 }

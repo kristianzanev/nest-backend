@@ -30,13 +30,14 @@ export class AuthService {
    * @description this method returns access token after validateUser method is called and validation is successful
    */
   async login(user: any, jwtOptions?: object) {
+
     const payload = {
       username: user.username,
       id: user._id,
       tokenVersion: user.tokenVersion,
     };
 
-    const access_token = this.jwtService.sign(payload, jwtOptions);
+    const access_token = await this.jwtService.signAsync(payload, jwtOptions);
 
     return {
       access_token,

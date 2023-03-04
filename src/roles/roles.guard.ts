@@ -1,6 +1,5 @@
 import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { ExtractJwt } from 'passport-jwt';
 import { Role } from './role.enum';
 import { ROLES_KEY } from './roles.decorator';
 
@@ -17,14 +16,9 @@ export class RolesGuard implements CanActivate {
       return true;
     }
 
-    const { user } = context.switchToHttp().getRequest();
-    // const req = context.switchToHttp().getRequest();
-    // TODO add this.usersSevice. find user
-    console.warn({user})
+    const { user } = context.switchToHttp().getRequest(); // the user object would not be passed if jwtGuard has not parsed the response beforehand
+    // don't use Roles guard globally, because it will be executed before jwtGuards
 
-    // return requiredRoles.some((role) => user.roles?.includes(role));
-
-
-    return true
+    return requiredRoles.some((role) => user.roles?.includes(role));
   }
 }

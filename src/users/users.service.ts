@@ -2,7 +2,7 @@ import { Injectable, BadRequestException } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from './interfaces/user.interface';
-import { hashPass } from 'src/utils/pass.bcrypt';
+import { hashString } from 'src/utils/pass.bcrypt';
 
 @Injectable()
 export class UsersService {
@@ -22,7 +22,7 @@ export class UsersService {
 
   async create(user: User): Promise<User> {
     try {
-      const hashedPass = await hashPass(user.password);
+      const hashedPass = await hashString(user.password);
       const newModel = new this.model({ ...user, password: hashedPass });
       return await newModel.save();
     } catch (error) {

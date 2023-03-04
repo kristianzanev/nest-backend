@@ -12,13 +12,10 @@ import {
 import { CreateTaskDto } from './dto/create-task.dto';
 import { TasksService } from './tasks.service';
 import { Task } from './interfaces/task.interface';
-// import { FindTaskByDto } from './dto/find-task-by.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { UsersService } from 'src/users/users.service';
 import { UpdateTaskDto } from './dto/update-task-info.dto';
-import { Roles } from 'src/roles/roles.decorator';
-import { Role } from 'src/roles/role.enum';
-import { RolesGuard } from 'src/roles/roles.guard';
+
 @Controller('tasks')
 export class TasksController {
   constructor(
@@ -26,8 +23,6 @@ export class TasksController {
     private usersService: UsersService,
   ) {}
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.Architect)
   @Get()
   findAll(): Promise<Task[]> {
     return this.tasksService.findAll();

@@ -45,14 +45,18 @@ export class ReviewsController {
 
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
-  async delete(@Param('id') id): Promise<Review> {
-    return this.reviewsService.delete(id);
+  async delete(@Request() req, @Param('id') taskId): Promise<Review> {
+    const { id: creatorId } = req.user;
+
+    return this.reviewsService.delete(creatorId, taskId);
   }
 
   @UseGuards(JwtAuthGuard)
   @Put(':id')
-  update(@Body() updateDto: UpdateReviewDto, @Param('id') id): Promise<Review> {
-    return this.reviewsService.update(id, updateDto);
+  update(@Request() req, @Body() updateDto: UpdateReviewDto, @Param('id') id): Promise<Review> {
+    const { id: creatorId } = req.user;
+
+    return this.reviewsService.update(creatorId, id, updateDto);
   }
 
   // TODO add find by review creatorId and title with guards

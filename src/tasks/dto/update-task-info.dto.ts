@@ -11,14 +11,18 @@ export class UpdateTaskDto {
   description: string;
 
   @IsString()
+  @IsNotEmpty()
   deadline: string;
 
   @IsBoolean()
+  @IsNotEmpty()
   isOnline: boolean;
 
   @IsString()
+  @IsNotEmpty()
   coordinates: string;
 
   @IsString()
+  @IsNotEmpty()
   category: string;
 }

@@ -43,16 +43,19 @@ export class TasksController {
 
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
-  async delete(@Param('id') id): Promise<Task> {
-    return await this.tasksService.delete(id);
+  async delete(@Request() req, @Param('id') taskId): Promise<Task> {
+    const { id: creatorId } = req.user;
+
+    return this.tasksService.delete(creatorId, taskId);
   }
 
   @UseGuards(JwtAuthGuard)
   @Put(':id')
-  update(@Body() updateDto: UpdateTaskDto, @Param('id') id): Promise<Task> {
-    return this.tasksService.update(id, updateDto);
-  }
+  update(@Request() req, @Body() updateDto: UpdateTaskDto, @Param('id') id): Promise<Task> {
+    const { id: creatorId } = req.user;
 
+    return this.tasksService.update(creatorId, id, updateDto);
+  }
   // TODO add find by task creatorId and title with guards
   // @Post('find-task-by')
   // findUserBy(@Body() findTaskDto: FindTaskByDto): Promise<Task> {

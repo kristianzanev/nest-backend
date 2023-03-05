@@ -1,4 +1,5 @@
 import * as mongoose from 'mongoose';
+import { Role } from 'src/roles/role.enum';
 
 const UserSchema = new mongoose.Schema(
   {
@@ -8,8 +9,7 @@ const UserSchema = new mongoose.Schema(
     name: { type: String, default: '', maxlength: 500 },
     description: { type: String, default: '', maxlength: 5000 },
     isEmailConfirmed: { type: Boolean, default: false },
-    tasks: { type: Array, default: [] },
-    roles: { type: Array, default: ['user'] },
+    roles: { type: Array, default: [Role.User] },
     tokenVersion: String,
   },
   { timestamps: true }, // adds create_at, update_at properties

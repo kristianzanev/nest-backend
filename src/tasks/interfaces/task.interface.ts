@@ -5,6 +5,6 @@ export interface Task {
   isOnline?: boolean;
   coordinates?: string;
   category?: string;
-  userId?: string;
+  creatorId?: string;
   id?: string;
 }

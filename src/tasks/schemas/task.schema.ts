@@ -8,9 +8,11 @@ const TaskSchema = new mongoose.Schema(
     deadline: { type: String, default: '', maxlength: 500 },
     coordinates: { type: String, default: '', maxlength: 500 },
     category: { type: String, default: '', maxlength: 500 },
-    userId: { type: String, default: '', maxlength: 500 },
+    creatorId: { type: String, default: '', maxlength: 500 },
   },
   { timestamps: true }, // adds create_at, update_at properties
 );
+
+TaskSchema.index({ creatorId: 1 }); // for faster database querying on this prop (don't overdo)
 
 export { TaskSchema };
